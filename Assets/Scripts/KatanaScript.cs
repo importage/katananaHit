@@ -24,7 +24,7 @@ public class KatanaScript : MonoBehaviour
         {
             rb.AddForce(throwForce, ForceMode2D.Impulse);
             rb.gravityScale = 1;
-            //TODO: Decrement number of available katanas
+            GameController.Instance.GameUI.DecrementDisplayKatanaCount();
         }
     }
 
@@ -37,6 +37,7 @@ public class KatanaScript : MonoBehaviour
 
         if (collision.collider.tag == "Log")
         {
+            GetComponent<ParticleSystem>().Play();
             rb.velocity = new Vector2(0, 0);
             rb.bodyType = RigidbodyType2D.Kinematic;
             transform.SetParent(collision.collider.transform);
@@ -44,11 +45,12 @@ public class KatanaScript : MonoBehaviour
             katanaCollider.offset = new Vector2(katanaCollider.offset.x, -0.4f);
             katanaCollider.size = new Vector2(katanaCollider.size.x, 1.2f);
 
-            //TODO: Spawn another katana
+            GameController.Instance.OnSuccessfulKatanaHit();
         }
         else if (collision.collider.tag == "Katana")
         {
             rb.velocity = new Vector2(rb.velocity.x, -2);
+            GameController.Instance.StartGameOverSequence(false);
         }
     }
 }
